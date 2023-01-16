@@ -1,5 +1,5 @@
-import express from "express";
-import { getSalary, salaryView, addSalary } from "../controllers/salary.js";
+const express = require("express");
+const { getSalary, salaryView, addSalary } = require("../controllers/salary");
 
 const router = express.Router();
 
@@ -8,4 +8,4 @@ router.get("/salaryView/:id", salaryView);
 // router.delete("/deleteCourse/:id", deleteCourse);
 router.post("/addSalary", addSalary);
 
-export default router;
+module.exports = router;

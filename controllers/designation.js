@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getDesign = async (req, res) => {
+const getDesign = async (req, res) => {
   const q = "SELECT * FROM staffdesgn";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +13,7 @@ export const getDesign = async (req, res) => {
   }
 };
 
-export const designView = async (req, res) => {
+const designView = async (req, res) => {
   const id = parseInt(req.params.id);
   const q = "SELECT * FROM staffdesgn WHERE id = ?";
 
@@ -27,7 +27,7 @@ export const designView = async (req, res) => {
   }
 };
 
-export const designationSearch = async (req, res) => {
+const designationSearch = async (req, res) => {
   const designationTitle = `${req.params.designationTitle}%`;
   const q = "SELECT * FROM staffdesgn WHERE nameTitle LIKE ?";
 
@@ -41,7 +41,7 @@ export const designationSearch = async (req, res) => {
   }
 };
 
-export const addDesign = async (req, res) => {
+const addDesign = async (req, res) => {
   const qr = "SELECT * FROM staffdesgn WHERE nameTitle = ?";
 
   const q =
@@ -62,10 +62,16 @@ export const addDesign = async (req, res) => {
       if (data.length < 1)
         return db.query(q, [values], (err, data) => {
           if (err) return res.status(500).json(err);
-           return res.status(200).send("Added successful");
+          return res.status(200).send("Added successful");
         });
     });
   } catch (error) {
     return res.send(error);
   }
+};
+module.exports = {
+  getDesign,
+  designView,
+  designationSearch,
+  addDesign,
 };

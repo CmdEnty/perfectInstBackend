@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getFeeStructure = async (req, res) => {
+const getFeeStructure = async (req, res) => {
   const q = "SELECT * FROM feestructure";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +13,7 @@ export const getFeeStructure = async (req, res) => {
   }
 };
 
-export const addFeeStructure = async (req, res) => {
+const addFeeStructure = async (req, res) => {
   const qr = "SELECT * FROM feestructure WHERE courseId = ?";
 
   const q =
@@ -42,4 +42,9 @@ export const addFeeStructure = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getFeeStructure,
+  addFeeStructure,
 };

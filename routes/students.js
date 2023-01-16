@@ -1,5 +1,5 @@
-import express from "express"
-import {
+const express = require("express");
+const {
   getAdmittedStudents,
   studentView,
   getPendingStudentsLocal,
@@ -7,9 +7,9 @@ import {
   admitStudent,
   deleteStudent,
   studentUpdate,
-} from "../controllers/students.js";
+} = require("../controllers/students");
 
-const router = express.Router()
+const router = express.Router();
 
 router.get("/", getAdmittedStudents);
 router.get("/getPendingStudentsLocal", getPendingStudentsLocal);
@@ -19,5 +19,4 @@ router.post("/admitStudent/:regNo", admitStudent);
 router.delete("/deleteStudent/:regNo", deleteStudent);
 router.post("/addStudent", addStudent);
 
-
-export default router
+module.exports = router;

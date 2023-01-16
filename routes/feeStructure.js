@@ -1,8 +1,8 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getFeeStructure,
   addFeeStructure,
-} from "../controllers/feeStructure.js";
+} = require("../controllers/feeStructure");
 
 const router = express.Router();
 
@@ -10,4 +10,4 @@ router.get("/", getFeeStructure);
 // router.delete("/deleteCourse/:id", deleteCourse);
 router.post("/addFeeStructure", addFeeStructure);
 
-export default router;
+module.exports = router;

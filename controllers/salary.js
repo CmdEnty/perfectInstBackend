@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getSalary = async (req, res) => {
+const getSalary = async (req, res) => {
   const q = "SELECT * FROM salary";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +13,7 @@ export const getSalary = async (req, res) => {
   }
 };
 
-export const salaryView = async (req, res) => {
+const salaryView = async (req, res) => {
   const id = parseInt(req.params.id);
   const q = "SELECT * FROM salary WHERE id = ?";
 
@@ -27,7 +27,7 @@ export const salaryView = async (req, res) => {
   }
 };
 
-export const addSalary = async (req, res) => {
+const addSalary = async (req, res) => {
   const q =
     "INSERT INTO salary (`staffNo`,`month`,`paymentMode`,`amount`,`receiptNo`,`dateCreated`) VALUES (?)";
 
@@ -48,4 +48,10 @@ export const addSalary = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getSalary,
+  salaryView,
+  addSalary,
 };

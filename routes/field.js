@@ -1,5 +1,5 @@
-import express from "express";
-import { getFields, addfield, fieldSearch } from "../controllers/field.js";
+const express = require("express");
+const { getFields, addfield, fieldSearch } = require("../controllers/field");
 
 const router = express.Router();
 
@@ -7,4 +7,4 @@ router.get("/", getFields);
 router.get("/search/:fieldName", fieldSearch);
 router.post("/addfield", addfield);
 
-export default router;
+module.exports = router;

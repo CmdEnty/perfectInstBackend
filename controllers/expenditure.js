@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getExpenditures = async (req, res) => {
+const getExpenditures = async (req, res) => {
   const q = "SELECT * FROM otherexpenditures";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +13,7 @@ export const getExpenditures = async (req, res) => {
   }
 };
 
-export const expenditureView = async (req, res) => {
+const expenditureView = async (req, res) => {
   const id = parseInt(req.params.id);
   const q = "SELECT * FROM otherexpenditures WHERE id = ?";
 
@@ -27,7 +27,7 @@ export const expenditureView = async (req, res) => {
   }
 };
 
-export const addExpenditure = async (req, res) => {
+const addExpenditure = async (req, res) => {
   const q =
     "INSERT INTO otherexpenditures (`amount`,`spentFor`,`methodOfPayment`,`receiptNo`,`recipientPhone`,`description`,`dateSpent`,`dateCreated`) VALUES (?)";
 
@@ -50,4 +50,9 @@ export const addExpenditure = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+module.exports = {
+  getExpenditures,
+  expenditureView,
+  addExpenditure,
 };

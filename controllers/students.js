@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getAdmittedStudents = async (req, res) => {
+const getAdmittedStudents = async (req, res) => {
   const q =
     "SELECT s.*,so.studentStatus FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo AND so.studentStatus = 'admitted')";
   try {
@@ -14,7 +14,7 @@ export const getAdmittedStudents = async (req, res) => {
   }
 };
 
-export const getPendingStudentsLocal = async (req, res) => {
+const getPendingStudentsLocal = async (req, res) => {
   const q =
     "SELECT s.*,so.studentStatus FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo AND so.studentStatus != 'admitted' AND so.regMode = 'Local')";
   try {
@@ -27,7 +27,7 @@ export const getPendingStudentsLocal = async (req, res) => {
   }
 };
 
-export const studentView = async (req, res) => {
+const studentView = async (req, res) => {
   const sid = parseInt(req.params.sid);
   const q =
     "SELECT s.*,sc.*,sn.*,so.*,co.* FROM students AS s JOIN studentscontacts AS sc ON (s.registrationNumber = sc.regNo) JOIN studentsnextofkin AS sn ON (s.registrationNumber = sn.regNo) JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN courses AS co ON (co.courseCode = so.courseId) WHERE s.id = ?";
@@ -41,7 +41,7 @@ export const studentView = async (req, res) => {
   }
 };
 
-export const studentUpdate = async (req, res) => {
+const studentUpdate = async (req, res) => {
   const sid = parseInt(req.params.sid);
   // const valueName = req.body.valueName;
   // const value = req.body.value;
@@ -59,7 +59,7 @@ export const studentUpdate = async (req, res) => {
     return res.send(error);
   }
 };
-export const admitStudent = async (req, res) => {
+const admitStudent = async (req, res) => {
   const regNo = parseInt(req.params.regNo);
   const q =
     "UPDATE studentsotherinfo SET admDate = CURRENT_TIMESTAMP, studentStatus = 'admitted' WHERE regNo = ?";
@@ -71,7 +71,7 @@ export const admitStudent = async (req, res) => {
     return res.send(error);
   }
 };
-export const deleteStudent = async (req, res) => {
+const deleteStudent = async (req, res) => {
   const regNo = parseInt(req.params.regNo);
   const q = "DELETE FROM students WHERE registrationNumber = ?";
 
@@ -98,7 +98,7 @@ export const deleteStudent = async (req, res) => {
   }
 };
 
-export const addStudent = async (req, res) => {
+const addStudent = async (req, res) => {
   const q =
     "INSERT INTO students (`studentTitle`,	`surName`,	`fastName`,	`middleName`,	`sgender`,	`idNumber`,	`snationality`,	`dob`,	`registrationNumber`) VALUES (?)";
 
@@ -173,4 +173,14 @@ export const addStudent = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getAdmittedStudents,
+  studentView,
+  getPendingStudentsLocal,
+  addStudent,
+  admitStudent,
+  deleteStudent,
+  studentUpdate,
 };

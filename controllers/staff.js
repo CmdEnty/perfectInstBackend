@@ -1,10 +1,9 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getStaffs = async (req, res) => {
+const getStaffs = async (req, res) => {
   const q =
     "SELECT s.*,so.staffStatus,so.regDate,so.staffNo,so.fieldId,so.designation, sc.county, sc.phoneNumber FROM staff AS s JOIN staffsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN staffscontacts AS sc ON (s.registrationNumber = sc.regNo)";
-;
   try {
     await db.query(q, (err, data) => {
       if (err) return res.status(500).json(err);
@@ -15,7 +14,7 @@ export const getStaffs = async (req, res) => {
   }
 };
 
-export const staffSearch = async (req, res) => {
+const staffSearch = async (req, res) => {
   const idNumber = `${req.params.idNumber}%`;
   const q = "SELECT * FROM staff WHERE idNumber LIKE ?";
 
@@ -29,8 +28,7 @@ export const staffSearch = async (req, res) => {
   }
 };
 
-
-export const staffView = async (req, res) => {
+const staffView = async (req, res) => {
   const sid = parseInt(req.params.sid);
   const q =
     "SELECT s.*,sc.*,sg.*,so.* FROM staff AS s JOIN staffscontacts AS sc ON (s.registrationNumber = sc.regNo) JOIN stafsguaranters AS sg ON (s.registrationNumber = sg.regNo) JOIN staffsotherinfo AS so ON (s.registrationNumber = so.regNo) WHERE s.id = ?";
@@ -44,7 +42,7 @@ export const staffView = async (req, res) => {
   }
 };
 
-export const deleteStaff = async (req, res) => {
+const deleteStaff = async (req, res) => {
   const regNo = parseInt(req.params.regNo);
   const q = "DELETE FROM staff WHERE registrationNumber = ?";
 
@@ -71,7 +69,7 @@ export const deleteStaff = async (req, res) => {
   }
 };
 
-export const addStaff = async (req, res) => {
+const addStaff = async (req, res) => {
   const qer = "SELECT * FROM staff WHERE idNumber = ?";
   const q =
     "INSERT INTO staff (`staffTitle`,	`surName`,	`fastName`,	`middleName`,	`sgender`,	`idNumber`,	`snationality`,	`dob`,	`registrationNumber`) VALUES (?)";
@@ -154,4 +152,12 @@ export const addStaff = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getStaffs,
+  staffView,
+  addStaff,
+  deleteStaff,
+  staffSearch,
 };

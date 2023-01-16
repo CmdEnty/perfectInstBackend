@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getCourse = async (req, res) => {
+const getCourse = async (req, res) => {
   const q = "SELECT * FROM courses";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +13,7 @@ export const getCourse = async (req, res) => {
   }
 };
 
-export const searchCourse = async (req, res) => {
+const searchCourse = async (req, res) => {
   const cid = `${req.params.cid}%`;
   const q = "SELECT * FROM courses WHERE courseCode LIKE ?";
 
@@ -27,7 +27,7 @@ export const searchCourse = async (req, res) => {
   }
 };
 
-export const courseView = async (req, res) => {
+const courseView = async (req, res) => {
   const cid = parseInt(req.params.cid);
   const q = "SELECT * FROM courses WHERE id = ?";
 
@@ -41,7 +41,7 @@ export const courseView = async (req, res) => {
   }
 };
 
-export const deleteCourse = async (req, res) => {
+const deleteCourse = async (req, res) => {
   const id = parseInt(req.params.id);
   const q = "DELETE FROM courses WHERE id = ?";
 
@@ -54,7 +54,7 @@ export const deleteCourse = async (req, res) => {
   }
 };
 
-export const addCourse = async (req, res) => {
+const addCourse = async (req, res) => {
   const qr = "SELECT * FROM courses WHERE courseCode = ?";
   const qry = "SELECT * FROM courses WHERE courseName = ?";
   const q =
@@ -91,4 +91,11 @@ export const addCourse = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+module.exports = {
+  addCourse,
+  deleteCourse,
+  courseView,
+  searchCourse,
+  getCourse,
 };

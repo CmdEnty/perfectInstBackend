@@ -1,7 +1,8 @@
-import moment from "moment";
-import { db } from "../connect.js";
 
-export const getUnits = async (req, res) => {
+const { db } = require("../connect");
+// const moment = require("moment");
+
+const getUnits = async (req, res) => {
   const q = "SELECT * FROM tblunits";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +14,7 @@ export const getUnits = async (req, res) => {
   }
 };
 
-export const addUnit = async (req, res) => {
+const addUnit = async (req, res) => {
   const qr = "SELECT * FROM tblunits WHERE unitCode = ?";
   const qry = "SELECT * FROM tblunits WHERE unitName = ?";
 
@@ -47,4 +48,9 @@ export const addUnit = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getUnits,
+  addUnit,
 };

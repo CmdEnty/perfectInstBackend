@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getFields = async (req, res) => {
+const getFields = async (req, res) => {
   const q = "SELECT * FROM tblfields";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +13,7 @@ export const getFields = async (req, res) => {
   }
 };
 
-export const fieldSearch = async (req, res) => {
+const fieldSearch = async (req, res) => {
   const fieldName = `${req.params.fieldName}%`;
   const q = "SELECT * FROM tblfields WHERE fieldName LIKE ?";
 
@@ -27,7 +27,7 @@ export const fieldSearch = async (req, res) => {
   }
 };
 
-export const addfield = async (req, res) => {
+const addfield = async (req, res) => {
   const qr = "SELECT * FROM tblfields WHERE fieldName = ?";
 
   const q =
@@ -53,4 +53,10 @@ export const addfield = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getFields,
+  addfield,
+  fieldSearch,
 };

@@ -1,9 +1,9 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getExpenditures,
   expenditureView,
   addExpenditure,
-} from "../controllers/expenditure.js";
+} = require("../controllers/expenditure");
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.get("/expenditureView/:id", expenditureView);
 // router.delete("/deleteCourse/:id", deleteCourse);
 router.post("/addExpenditure", addExpenditure);
 
-export default router;
+module.exports = router;

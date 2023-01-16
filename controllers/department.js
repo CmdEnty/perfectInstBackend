@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getDepartments = async (req, res) => {
+const getDepartments = async (req, res) => {
   const q = "SELECT * FROM departments";
   try {
     await db.query(q, (err, data) => {
@@ -12,9 +12,8 @@ export const getDepartments = async (req, res) => {
     return res.send(error);
   }
 };
-				
 
-export const addDepartment = async (req, res) => {
+const addDepartment = async (req, res) => {
   const qr = "SELECT * FROM departments WHERE departName = ?";
 
   const q =
@@ -30,7 +29,8 @@ export const addDepartment = async (req, res) => {
   try {
     await db.query(qr, [req.body.departName], (err, data) => {
       if (err) return res.status(500).json(err);
-      if (data.length) return res.status(500).json("departName already exists!");
+      if (data.length)
+        return res.status(500).json("departName already exists!");
       if (data.length < 1)
         return db.query(q, [values], (err, data) => {
           if (err) return res.status(500).json(err);
@@ -40,4 +40,9 @@ export const addDepartment = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getDepartments,
+  addDepartment,
 };

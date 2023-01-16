@@ -1,7 +1,7 @@
-import moment from "moment";
-import { db } from "../connect.js";
+const { db } = require("../connect");
+const moment = require("moment");
 
-export const getClasses = async (req, res) => {
+const getClasses = async (req, res) => {
   const q = "SELECT * FROM intakeclasses";
   try {
     await db.query(q, (err, data) => {
@@ -13,7 +13,7 @@ export const getClasses = async (req, res) => {
   }
 };
 
-export const addClass = async (req, res) => {
+const addClass = async (req, res) => {
   const qr = "SELECT * FROM intakeclasses WHERE classTitle = ?";
 
   const q =
@@ -41,4 +41,9 @@ export const addClass = async (req, res) => {
   } catch (error) {
     return res.send(error);
   }
+};
+
+module.exports = {
+  getClasses,
+  addClass,
 };

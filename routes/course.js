@@ -1,11 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getCourse,
   courseView,
   searchCourse,
   addCourse,
   deleteCourse,
-} from "../controllers/course.js";
+} = require("../controllers/course");
+
 
 const router = express.Router();
 
@@ -15,4 +16,4 @@ router.get("/search/:cid", searchCourse);
 router.delete("/deleteCourse/:id", deleteCourse);
 router.post("/addCourse", addCourse);
 
-export default router;
+module.exports = router;
