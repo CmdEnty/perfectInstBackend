@@ -1,4 +1,6 @@
 const db = require("../connect");
+const bcrypt = require("bcrypt");
+// const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
 const getCourse = async (req, res) => {
@@ -27,7 +29,7 @@ const searchCourse = async (req, res) => {
   }
 };
 
-const courseView = async (req, res) => {
+const login = async (req, res) => {
   const cid = parseInt(req.params.cid);
   const q = "SELECT * FROM courses WHERE id = ?";
 
@@ -41,7 +43,7 @@ const courseView = async (req, res) => {
   }
 };
 
-const deleteCourse = async (req, res) => {
+const register = async (req, res) => {
   const id = parseInt(req.params.id);
   const q = "DELETE FROM courses WHERE id = ?";
 
@@ -54,7 +56,7 @@ const deleteCourse = async (req, res) => {
   }
 };
 
-const addCourse = async (req, res) => {
+const logout = async (req, res) => {
   const qr = "SELECT * FROM courses WHERE courseCode = ?";
   const qry = "SELECT * FROM courses WHERE courseName = ?";
   const q =
@@ -93,9 +95,9 @@ const addCourse = async (req, res) => {
   }
 };
 module.exports = {
-  addCourse,
-  deleteCourse,
-  courseView,
+login,
+  logout,
+  register,
   searchCourse,
   getCourse,
 };

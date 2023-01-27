@@ -1,9 +1,18 @@
-const { db } = require("../connect");
+const db = require("../connect");
 const moment = require("moment");
 
-const getAdmittedStudents = async (req, res) => {
+const getAdmittedStudents = (req, res) => {
   const q =
     "SELECT s.*,so.studentStatus FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo AND so.studentStatus = 'admitted')";
+  db.query(q, function (err, data) {
+    if (err) return res.status(500).json(err);
+    return res.status(200).send(data);
+  });
+};
+
+const getPendingStudentsLocal = async (req, res) => {
+  const q =
+    "SELECT s.*,so.studentStatus FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo AND so.studentStatus != 'admitted' AND so.regMode = 'Local')";
   try {
     await db.query(q, (err, data) => {
       if (err) return res.status(500).json(err);
@@ -14,11 +23,13 @@ const getAdmittedStudents = async (req, res) => {
   }
 };
 
-const getPendingStudentsLocal = async (req, res) => {
+const studentSearch = async (req, res) => {
+  const idNumber = `${req.params.idNumber}%`;
   const q =
-    "SELECT s.*,so.studentStatus FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo AND so.studentStatus != 'admitted' AND so.regMode = 'Local')";
+    "SELECT s.*, so.courseId, co.courseName FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN courses AS co ON (so.courseId = co.courseCode)  WHERE s.idNumber LIKE ?";
+
   try {
-    await db.query(q, (err, data) => {
+    await db.query(q, [idNumber], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).send(data);
     });
@@ -43,13 +54,7 @@ const studentView = async (req, res) => {
 
 const studentUpdate = async (req, res) => {
   const sid = parseInt(req.params.sid);
-  // const valueName = req.body.valueName;
-  // const value = req.body.value;
-  const valueName = "surName";
-  const value = "maghania";
   const q = `UPDATE students SET '${valueName}' = '${value}' WHERE id = ?`;
-  // "UPDATE students SET "`${valueName}`" = "`${valueName}`" "WHERE id = ?";
-
   try {
     await db.query(q, [sid], (err, data) => {
       if (err) return res.status(500).json(err);
@@ -59,6 +64,61 @@ const studentUpdate = async (req, res) => {
     return res.send(error);
   }
 };
+
+const updateStudent = async (req, res) => {
+  const sid = parseInt(req.params.sid);
+  const q =
+    "UPDATE students SET surName = ?, fastName = ?, middleName = ?, idNumber = ? WHERE id = ?";
+  try {
+    await db.query(
+      q,
+      [
+        req.body.surName,
+        req.body.fastName,
+        req.body.middleName,
+        req.body.idNumber,
+        sid,
+      ],
+      (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.send("Student Updated Successful");
+      }
+    );
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
+const updateSpecialNeeds = async (req, res) => {
+  const q = "UPDATE studentsotherinfo SET specialNeeds = ? WHERE regNo = ?";
+  try {
+    await db.query(q, [req.body.specialNeeds, req.body.regNo], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.send("Student Updated Successful");
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
+const updateContacts = async (req, res) => {
+  const sid = parseInt(req.params.sid);
+  const q =
+    "UPDATE studentscontacts SET phoneNumber = ?, email = ? WHERE id = ?";
+  try {
+    await db.query(
+      q,
+      [req.body.phoneNumber, req.body.email, sid],
+      (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.send("Student Updated Successful");
+      }
+    );
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
 const admitStudent = async (req, res) => {
   const regNo = parseInt(req.params.regNo);
   const q =
@@ -183,4 +243,8 @@ module.exports = {
   admitStudent,
   deleteStudent,
   studentUpdate,
+  updateStudent,
+  updateContacts,
+  updateSpecialNeeds,
+  studentSearch,
 };

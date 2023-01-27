@@ -1,4 +1,4 @@
-const { db } = require("../connect");
+const db  = require("../connect");
 const moment = require("moment");
 
 const getExpenditures = async (req, res) => {

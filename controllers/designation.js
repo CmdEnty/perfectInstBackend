@@ -1,4 +1,4 @@
-const { db } = require("../connect");
+const db = require("../connect");
 const moment = require("moment");
 
 const getDesign = async (req, res) => {
@@ -7,6 +7,20 @@ const getDesign = async (req, res) => {
     await db.query(q, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).send(data);
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
+const editSalary = async (req, res) => {
+  const id = req.body.id;
+  const q = "UPDATE staffdesgn SET salary = ? WHERE id = ?";
+
+  try {
+    await db.query(q, [req.body.salary, id], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).send("Updated Successful");
     });
   } catch (error) {
     return res.send(error);
@@ -74,4 +88,5 @@ module.exports = {
   designView,
   designationSearch,
   addDesign,
+  editSalary,
 };

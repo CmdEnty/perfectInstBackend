@@ -1,5 +1,5 @@
 
-const { db } = require("../connect");
+const db = require("../connect");
 // const moment = require("moment");
 
 const getUnits = async (req, res) => {

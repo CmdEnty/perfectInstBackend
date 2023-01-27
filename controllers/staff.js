@@ -1,4 +1,4 @@
-const { db } = require("../connect");
+const db = require("../connect");
 const moment = require("moment");
 
 const getStaffs = async (req, res) => {
@@ -16,7 +16,8 @@ const getStaffs = async (req, res) => {
 
 const staffSearch = async (req, res) => {
   const idNumber = `${req.params.idNumber}%`;
-  const q = "SELECT * FROM staff WHERE idNumber LIKE ?";
+  const q =
+    "SELECT s.*, so.designation,so.staffNo FROM staff AS s JOIN staffsotherinfo AS so ON (s.registrationNumber = so.regNo)  WHERE s.idNumber LIKE ?";
 
   try {
     await db.query(q, [idNumber], (err, data) => {
@@ -31,12 +32,65 @@ const staffSearch = async (req, res) => {
 const staffView = async (req, res) => {
   const sid = parseInt(req.params.sid);
   const q =
-    "SELECT s.*,sc.*,sg.*,so.* FROM staff AS s JOIN staffscontacts AS sc ON (s.registrationNumber = sc.regNo) JOIN stafsguaranters AS sg ON (s.registrationNumber = sg.regNo) JOIN staffsotherinfo AS so ON (s.registrationNumber = so.regNo) WHERE s.id = ?";
+    "SELECT s.*,sc.*,sg.*,so.*,sd.salary FROM staff AS s JOIN staffscontacts AS sc ON (s.registrationNumber = sc.regNo) JOIN stafsguaranters AS sg ON (s.registrationNumber = sg.regNo) JOIN staffsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN staffdesgn AS sd ON (sd.nameTitle = so.designation) WHERE s.id = ?";
   try {
     await db.query(q, [sid], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).send(data[0]);
     });
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
+const updateStaffs = async (req, res) => {
+  const sid = parseInt(req.params.sid);
+  const q =
+    "UPDATE staff SET surName = ?, fastName = ?, middleName = ?, idNumber = ? WHERE id = ?";
+  try {
+    await db.query(
+      q,
+      [
+        req.body.surName,
+        req.body.fastName,
+        req.body.middleName,
+        req.body.idNumber,
+        sid,
+      ],
+      (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.send("Staff Updated Successful");
+      }
+    );
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
+const updateSpecialNeeds = async (req, res) => {
+  const q = "UPDATE staffsotherinfo SET specialNeeds = ? WHERE regNo = ?";
+  try {
+    await db.query(q, [req.body.specialNeeds, req.body.regNo], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.send("Staff Updated Successful");
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+};
+
+const updateContacts = async (req, res) => {
+  const sid = parseInt(req.params.sid);
+  const q = "UPDATE staffscontacts SET phoneNumber = ?, email = ? WHERE id = ?";
+  try {
+    await db.query(
+      q,
+      [req.body.phoneNumber, req.body.email, sid],
+      (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.send("Staff Updated Successful");
+      }
+    );
   } catch (error) {
     return res.send(error);
   }
@@ -128,6 +182,23 @@ const addStaff = async (req, res) => {
     moment(Date.now()).format("YYYY-DD-MM HH:mm:ss"),
     req.body.maritalStatus,
   ];
+
+  const qrry1 =
+    "INSERT INTO staffuploads (`staffRegNo`,`docTitle`,`url`,`dateCreated`) VALUES (?),(?)";
+
+  const values4 = [
+    req.body.regNo,
+    "Kra pin",
+    req.body.kraDocUrl,
+    moment(Date.now()).format("YYYY-DD-MM HH:mm:ss"),
+  ];
+  const values5 = [
+    req.body.regNo,
+    "Nhif",
+    req.body.nhifDocUrl,
+    moment(Date.now()).format("YYYY-DD-MM HH:mm:ss"),
+  ];
+
   try {
     await db.query(qer, [req.body.idNumber], (err, data) => {
       if (err) return res.status(500).json(err);
@@ -142,7 +213,10 @@ const addStaff = async (req, res) => {
               if (err) return res.status(500).json(err);
               db.query(qrry, [values3], (err, data) => {
                 if (err) return res.status(500).json(err);
-                return res.status(200).send("Staff Added Successful");
+                db.query(qrry1, [values4, values5], (err, data) => {
+                  if (err) return res.status(500).json(err);
+                  return res.status(200).send("Staff Added Successful");
+                });
               });
             });
           });
@@ -160,4 +234,7 @@ module.exports = {
   addStaff,
   deleteStaff,
   staffSearch,
+  updateStaffs,
+  updateContacts,
+  updateSpecialNeeds,
 };
