@@ -26,7 +26,7 @@ const getPendingStudentsLocal = async (req, res) => {
 const studentSearch = async (req, res) => {
   const idNumber = `${req.params.idNumber}%`;
   const q =
-    "SELECT s.*, so.courseId,so.admissionNo, co.courseName FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN courses AS co ON (so.courseId = co.courseCode)  WHERE s.idNumber LIKE ?";
+    "SELECT s.*, so.courseId, co.courseName FROM students AS s JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN courses AS co ON (so.courseId = co.courseCode)  WHERE s.idNumber LIKE ?";
 
   try {
     await db.query(q, [idNumber], (err, data) => {
@@ -41,7 +41,7 @@ const studentSearch = async (req, res) => {
 const studentView = async (req, res) => {
   const sid = parseInt(req.params.sid);
   const q =
-    "SELECT s.*,sc.*,sn.*,so.*,co.* FROM students AS s JOIN studentscontacts AS sc ON (s.registrationNumber = sc.regNo) JOIN studentsnextofkin AS sn ON (s.registrationNumber = sn.regNo) JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN courses AS co ON (co.id = so.courseId) WHERE s.id = ?";
+    "SELECT s.*,sc.*,sn.*,so.*,co.* FROM students AS s JOIN studentscontacts AS sc ON (s.registrationNumber = sc.regNo) JOIN studentsnextofkin AS sn ON (s.registrationNumber = sn.regNo) JOIN studentsotherinfo AS so ON (s.registrationNumber = so.regNo) JOIN courses AS co ON (co.courseCode = so.courseId) WHERE s.id = ?";
   try {
     await db.query(q, [sid], (err, data) => {
       if (err) return res.status(500).json(err);
@@ -96,23 +96,6 @@ const updateSpecialNeeds = async (req, res) => {
       if (err) return res.status(500).json(err);
       return res.send("Student Updated Successful");
     });
-  } catch (error) {
-    return res.send(error);
-  }
-};
-
-const updateStudentNextOfKin = async (req, res) => {
-  const q =
-    "UPDATE studentsnextofkin SET phoneNo = ?, emailAddress = ? WHERE regNo = ?";
-  try {
-    await db.query(
-      q,
-      [req.body.phoneNo, req.body.emailAddress, req.body.regNo],
-      (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.send("Student Updated Successful");
-      }
-    );
   } catch (error) {
     return res.send(error);
   }
@@ -264,5 +247,4 @@ module.exports = {
   updateContacts,
   updateSpecialNeeds,
   studentSearch,
-  updateStudentNextOfKin,
 };

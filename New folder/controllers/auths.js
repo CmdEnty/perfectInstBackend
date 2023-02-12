@@ -1,22 +1,12 @@
 const db = require("../connect");
+const bcrypt = require("bcrypt");
+// const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
 const getCourse = async (req, res) => {
   const q = "SELECT * FROM courses";
   try {
     await db.query(q, (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).send(data);
-    });
-  } catch (error) {
-    return res.send(error);
-  }
-};
-
-const getComplited = async (req, res) => {
-  const q = "SELECT * FROM courses WHERE feeStructureStatus = ?";
-  try {
-    await db.query(q, ["complited"], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).send(data);
     });
@@ -39,7 +29,7 @@ const searchCourse = async (req, res) => {
   }
 };
 
-const courseView = async (req, res) => {
+const login = async (req, res) => {
   const cid = parseInt(req.params.cid);
   const q = "SELECT * FROM courses WHERE id = ?";
 
@@ -53,7 +43,7 @@ const courseView = async (req, res) => {
   }
 };
 
-const deleteCourse = async (req, res) => {
+const register = async (req, res) => {
   const id = parseInt(req.params.id);
   const q = "DELETE FROM courses WHERE id = ?";
 
@@ -66,11 +56,11 @@ const deleteCourse = async (req, res) => {
   }
 };
 
-const addCourse = async (req, res) => {
+const logout = async (req, res) => {
   const qr = "SELECT * FROM courses WHERE courseCode = ?";
   const qry = "SELECT * FROM courses WHERE courseName = ?";
   const q =
-    "INSERT INTO courses (`courseCode`,`courseField`,	`courseLevel`,	`courseName`,`dateCreated`,	`duration`,	`period`,`feeStructureStatus`,`qualification`) VALUES (?)";
+    "INSERT INTO courses (`courseCode`,`courseField`,	`courseLevel`,	`courseName`,`dateCreated`,	`duration`,	`period`,`qualification`) VALUES (?)";
 
   const values = [
     req.body.code,
@@ -80,7 +70,6 @@ const addCourse = async (req, res) => {
     moment(Date.now()).format("YYYY-DD-MM HH:mm:ss"),
     req.body.duration,
     req.body.durationValue,
-    "incomplite",
     req.body.qualification,
   ];
 
@@ -106,10 +95,9 @@ const addCourse = async (req, res) => {
   }
 };
 module.exports = {
-  addCourse,
-  deleteCourse,
-  courseView,
+login,
+  logout,
+  register,
   searchCourse,
   getCourse,
-  getComplited,
 };

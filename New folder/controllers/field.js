@@ -55,54 +55,8 @@ const addfield = async (req, res) => {
   }
 };
 
-const updateField = async (req, res) => {
-  const qr = "SELECT * FROM tblfields WHERE id = ?";
-
-  const q = "UPDATE tblfields SET fieldName = ?,descr = ? WHERE id = ?";
-
-  try {
-    await db.query(qr, [parseInt(req.params.id)], (err, data) => {
-      if (err) return res.status(500).json(err);
-      if (data.length < 1) return res.status(500).json("field not exist!");
-      if (data.length)
-        return db.query(
-          q,
-          [req.body.fieldName, req.body.descr, parseInt(req.params.id)],
-          (err, data) => {
-            if (err) return res.status(500).json(err);
-            return res.status(200).send("Field Updated successful");
-          }
-        );
-    });
-  } catch (error) {
-    return res.send(error);
-  }
-};
-
-const deleteField = async (req, res) => {
-  const qr = "SELECT * FROM tblfields WHERE id = ?";
-
-  const q = "DELETE FROM tblfields WHERE id = ?";
-
-  try {
-    await db.query(qr, [parseInt(req.params.id)], (err, data) => {
-      if (err) return res.status(500).json(err);
-      if (data.length < 1) return res.status(500).json("field not exist!");
-      if (data.length)
-        return db.query(q, [parseInt(req.params.id)], (err, data) => {
-          if (err) return res.status(500).json(err);
-          return res.status(200).send("Field Deleted successful");
-        });
-    });
-  } catch (error) {
-    return res.send(error);
-  }
-};
-
 module.exports = {
   getFields,
   addfield,
   fieldSearch,
-  updateField,
-  deleteField,
 };

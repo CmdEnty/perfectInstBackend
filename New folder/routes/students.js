@@ -11,7 +11,6 @@ const {
   updateContacts,
   updateSpecialNeeds,
   studentSearch,
-  updateStudentNextOfKin,
 } = require("../controllers/students");
 
 const router = express.Router();
@@ -24,7 +23,6 @@ router.get("/search/:idNumber", studentSearch);
 router.post("/students/:sid", updateStudent);
 router.post("/updateContacts/:sid", updateContacts);
 router.post("/updateSpecialNeeds/:sid", updateSpecialNeeds);
-router.post("/updateNextOfKin/:sid", updateStudentNextOfKin);
 router.post("/admitStudent/:regNo", admitStudent);
 router.delete("/deleteStudent/:regNo", deleteStudent);
 router.post("/addStudent", addStudent);

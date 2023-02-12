@@ -8,7 +8,6 @@ const {
   updateStaffs,
   updateContacts,
   updateSpecialNeeds,
-  updateStaffNextOfKin,
 } = require("../controllers/staff");
 
 const router = express.Router();
@@ -20,7 +19,6 @@ router.delete("/deleteStaff/:regNo", deleteStaff);
 router.post("/staffs/:sid", updateStaffs);
 router.post("/updateContacts/:sid", updateContacts);
 router.post("/updateSpecialNeeds/:sid", updateSpecialNeeds);
-router.post("/updateNextOfKin/:sid", updateStaffNextOfKin);
 router.get("/search/:idNumber", staffSearch);
 router.post("/addStaff", addStaff);
 

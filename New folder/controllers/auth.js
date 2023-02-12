@@ -95,8 +95,8 @@ const updateUser = (req, res) => {
 
   jwt.verify(token, process.env.SECRETKEY, (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    if (req.params.id !== userInfo.id)
-      return res.status(500).json("You can update only your account!");
+    if (req.params.id === userInfo.id)
+      return res.status(500).json("You can update only your post!");
 
     const q = "UPDATE staffacc SET `userName`=?,`email`=? WHERE `id`=? ";
 
@@ -106,7 +106,7 @@ const updateUser = (req, res) => {
       (err, data) => {
         if (err) res.status(500).json(err);
         if (data.affectedRows > 0) return res.json("Updated!");
-        return res.status(403).json("You can update only your account!");
+        return res.status(403).json("You can update only your post!");
       }
     );
   });

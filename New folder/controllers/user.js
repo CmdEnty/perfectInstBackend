@@ -30,7 +30,7 @@ const updateUser = (req, res) => {
   jwt.verify(token, process.env.SECRETKEY, (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
     if (userId === userInfo.id)
-      return res.status(500).json("You can update only your account!");
+      return res.status(500).json("You can update only your post!");
 
     const q = "UPDATE staffacc SET `userName`=?,`email`=? WHERE id=? ";
 
@@ -40,7 +40,7 @@ const updateUser = (req, res) => {
       (err, data) => {
         if (err) res.status(500).json(err);
         if (data.affectedRows > 0) return res.json("Updated!");
-        return res.status(403).json("You can update only your account!");
+        return res.status(403).json("You can update only your post!");
       }
     );
   });
@@ -91,7 +91,7 @@ const updateUserPsd = (req, res) => {
 
 const updateProfilePic = (req, res) => {
   let token;
-  const userId = parseInt(req.params.id);
+  const userId = req.params.id;
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer")) {
     token = authHeader.split(" ")[1];
@@ -104,15 +104,15 @@ const updateProfilePic = (req, res) => {
 
   jwt.verify(token, process.env.SECRETKEY, (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    if (userId !== parseInt(userInfo.id))
-      return res.status(500).json("You can update only your account!");
+    if (userId === userInfo.id)
+      return res.status(500).json("You can update only your post!");
 
     const q = "UPDATE staffacc SET `profilePic`=? WHERE id=? ";
 
     db.query(q, [req.body.imgUrl, parseInt(req.params.id)], (err, data) => {
       if (err) res.status(500).json(err);
       if (data.affectedRows > 0) return res.json("Updated!");
-      return res.status(403).json("You can update only your account!");
+      return res.status(403).json("You can update only your post!");
     });
   });
 };

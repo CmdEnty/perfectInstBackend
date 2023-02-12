@@ -13,18 +13,6 @@ const getCourse = async (req, res) => {
   }
 };
 
-const getComplited = async (req, res) => {
-  const q = "SELECT * FROM courses WHERE feeStructureStatus = ?";
-  try {
-    await db.query(q, ["complited"], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).send(data);
-    });
-  } catch (error) {
-    return res.send(error);
-  }
-};
-
 const searchCourse = async (req, res) => {
   const cid = `${req.params.cid}%`;
   const q = "SELECT * FROM courses WHERE courseCode LIKE ?";
@@ -70,7 +58,7 @@ const addCourse = async (req, res) => {
   const qr = "SELECT * FROM courses WHERE courseCode = ?";
   const qry = "SELECT * FROM courses WHERE courseName = ?";
   const q =
-    "INSERT INTO courses (`courseCode`,`courseField`,	`courseLevel`,	`courseName`,`dateCreated`,	`duration`,	`period`,`feeStructureStatus`,`qualification`) VALUES (?)";
+    "INSERT INTO courses (`courseCode`,`courseField`,	`courseLevel`,	`courseName`,`dateCreated`,	`duration`,	`period`,`qualification`) VALUES (?)";
 
   const values = [
     req.body.code,
@@ -80,7 +68,6 @@ const addCourse = async (req, res) => {
     moment(Date.now()).format("YYYY-DD-MM HH:mm:ss"),
     req.body.duration,
     req.body.durationValue,
-    "incomplite",
     req.body.qualification,
   ];
 
@@ -111,5 +98,4 @@ module.exports = {
   courseView,
   searchCourse,
   getCourse,
-  getComplited,
 };

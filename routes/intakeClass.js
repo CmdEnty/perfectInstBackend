@@ -1,10 +1,16 @@
 const express = require("express");
-const { getClasses, addClass } = require("../controllers/intakeClass");
+const {
+  getClasses,
+  addClass,
+  addCourse,
+  getClass,
+} = require("../controllers/intakeClass");
 
 const router = express.Router();
 
 router.get("/", getClasses);
-// router.delete("/deleteCourse/:id", deleteCourse);
+router.get("/:id", getClass);
+router.post("/addCourse", addCourse);
 router.post("/addClass", addClass);
 
 module.exports = router;

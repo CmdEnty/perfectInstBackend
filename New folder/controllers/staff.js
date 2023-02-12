@@ -79,23 +79,6 @@ const updateSpecialNeeds = async (req, res) => {
   }
 };
 
-const updateStaffNextOfKin = async (req, res) => {
-  const q =
-    "UPDATE stafsguaranters SET phoneNo = ?, emailAddress = ? WHERE regNo = ?";
-  try {
-    await db.query(
-      q,
-      [req.body.phoneNo, req.body.emailAddress, req.body.regNo],
-      (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.send("Staff Updated Successful");
-      }
-    );
-  } catch (error) {
-    return res.send(error);
-  }
-};
-
 const updateContacts = async (req, res) => {
   const sid = parseInt(req.params.sid);
   const q = "UPDATE staffscontacts SET phoneNumber = ?, email = ? WHERE id = ?";
@@ -254,5 +237,4 @@ module.exports = {
   updateStaffs,
   updateContacts,
   updateSpecialNeeds,
-  updateStaffNextOfKin,
 };
